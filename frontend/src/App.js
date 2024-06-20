@@ -6,10 +6,10 @@ const App = () => {
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const [topLeftPoint, setTopLeftPoint] = useState({ lat: '', lng: '' });
-  const [fieldSize, setFieldSize] = useState('');
+  const fieldSize = useState('15000'); // Seteamos el valor inicial de fieldSize a 15000
   const [imageData, setImageData] = useState('');
   const [percentages, setPercentages] = useState(null);
-  const [evi, setEvi] = useState(true);
+  const [evi] = useState(true); // EVI siempre será true y no será visible en pantalla
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -29,7 +29,10 @@ const App = () => {
 
   return (
     <div className="container">
-      <h1>Vegetation Analysis</h1>
+      <div className="company-name" style={{  padding: '10px', marginBottom: '20px' }}>
+        <h1 style={{ color: 'white' }}>Capazeta</h1>
+      </div>
+      {/* <h2>Vegetation Analysis</h2> */}
       <div className="content">
         <form onSubmit={handleSubmit} className="form">
           <div>
@@ -48,20 +51,16 @@ const App = () => {
             <label>Top Left Point Longitude:</label>
             <input type="text" value={topLeftPoint.lng} onChange={(e) => setTopLeftPoint({ ...topLeftPoint, lng: e.target.value })} required />
           </div>
-          <div>
-            <label>Field Size (m):</label>
-            <input type="number" value={fieldSize} onChange={(e) => setFieldSize(e.target.value)} required />
-          </div>
-          <div>
-            <label>EVI:</label>
-            <input type="checkbox" checked={evi} onChange={(e) => setEvi(e.target.checked)} />
-          </div>
-          <button type="submit">Submit</button>
+          {/* Campo Field Size oculto */}
+          <input type="hidden" value={fieldSize} />
+          {/* EVI field oculto */}
+          <input type="hidden" value={evi} />
+          <button type="submit" className="material-button">Submit</button>
         </form>
         <div className="results">
           {percentages && (
             <div>
-              <h2>Vegetation Percentages</h2>
+              <h3>Vegetation Percentages</h3>
               <p>No Vegetation: {percentages.no_vegetation}</p>
               <p>Moderate Vegetation: {percentages.moderate_vegetation}</p>
               <p>Dense Vegetation: {percentages.dense_vegetation}</p>
@@ -71,7 +70,7 @@ const App = () => {
       </div>
       {imageData && (
         <div className="image-container">
-          <h2>Image</h2>
+          {/* <h3>Image</h3> */}
           <img src={`data:image/png;base64,${imageData}`} alt="Vegetation Analysis" />
         </div>
       )}

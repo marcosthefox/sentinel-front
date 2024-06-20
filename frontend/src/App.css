@@ -80,3 +80,51 @@ img {
 }
 
 
+.material-button {
+  background-color: #1976d2; /* Color de fondo azul */
+  color: white; /* Color de texto blanco */
+  padding: 10px 20px; /* Espaciado interno */
+  border: none; /* Sin borde */
+  cursor: pointer; /* Cursor tipo pointer al pasar */
+  font-size: 16px; /* Tamaño de fuente */
+  border-radius: 4px; /* Bordes redondeados */
+  transition: background-color 0.3s ease; /* Transición suave del color de fondo */
+}
+
+.company-name {
+  font-size: 24px;
+  font-weight: bold;
+  /* color de fondo que ocupe toda la pantalla */
+  background-color: #282c34;
+  color: white;
+  padding: 10px 0;
+  width: 100%;
+  text-align: center;
+}
+
+.form {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.form div {
+  margin-bottom: 15px; /* Espacio adicional entre cada campo */
+  display: flex; /* Hacer que cada div sea un contenedor flex */
+  align-items: center; /* Centrar verticalmente los elementos */
+}
+
+.form label {
+  margin-right: 10px; /* Espacio a la derecha del label */
+  width: 150px; /* Ancho fijo para los labels */
+  text-align: right; /* Alinear texto del label a la derecha */
+}
+
+.form input {
+  flex: 1; /* Hacer que los inputs ocupen todo el espacio restante */
+}
+
+.results {
+  flex: 1; /* Hacer que el contenedor de resultados ocupe el espacio restante */
+  margin-left: 100px; /* Espacio a la izquierda */
+}
