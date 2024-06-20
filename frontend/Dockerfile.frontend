@@ -1,0 +1,26 @@
+# Dockerfile para el Frontend
+
+# Usa una imagen base oficial de Node.js
+FROM node:14
+
+# Establece el directorio de trabajo
+WORKDIR /app
+
+# Copia el package.json y el package-lock.json y los instala
+COPY ./frontend/package*.json ./
+RUN npm install
+
+# Copia el resto de la aplicación
+COPY ./frontend .
+
+# Compila la aplicación
+RUN npm run build
+
+# Instala serve para servir la aplicación construida
+RUN npm install -g serve
+
+# Expone el puerto que usa la aplicación
+EXPOSE 3000
+
+# Define el comando por defecto para ejecutar la aplicación
+CMD ["serve", "-s", "build"]

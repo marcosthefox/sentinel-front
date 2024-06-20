@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  backend:
+    build: 
+      context: .
+      dockerfile: ./backend/Dockerfile.backend
+    ports:
+      - "8500:8500"
+    environment:
+      - FLASK_ENV=development
+  frontend:
+    build:
+      context: .
+      dockerfile: ./frontend/Dockerfile.frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
