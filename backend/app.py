@@ -17,8 +17,8 @@ swagger = Swagger(app)
 CORS(app)
 auth_url = 'https://services.sentinel-hub.com/auth/realms/main/protocol/openid-connect/token'
 
-default_client_id = os.getenv('SENTINEL_CLIENT_ID', '9c0c3d7a-eb52-4ce1-bc03-b06f43f1b3eb')
-default_client_secret = os.getenv('SENTINEL_CLIENT_SECRET', 'juqsKd57rYsrLGCevRjhrlG7QwKm1WVw')
+default_client_id = os.getenv('SENTINEL_CLIENT_ID', 'f5092bdc-c661-4e4d-b589-a1c099975720')
+default_client_secret = os.getenv('SENTINEL_CLIENT_SECRET', 'HVjucPMH7tThMDFZf18y9I1WMON3S39K')
 default_port = os.getenv('SERVER_PORT', 8500)
 
 @app.route('/api/sentinel/download_image', methods=['POST'])
