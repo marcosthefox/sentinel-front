@@ -5,34 +5,40 @@ import './App.css'; // Asegúrate de importar el archivo CSS
 const App = () => {
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
-  const [topLeftPoint, setTopLeftPoint] = useState({ lat: '', lng: '' });
-  const fieldSize = useState('15000'); // Seteamos el valor inicial de fieldSize a 15000
+  const [polygon, setPolygon] = useState('');
   const [imageData, setImageData] = useState('');
   const [percentages, setPercentages] = useState(null);
+  const [loading, setLoading] = useState(false);
   const [evi] = useState(true); // EVI siempre será true y no será visible en pantalla
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true); // Set loading to true when submit is clicked
     try {
+      const parsedPolygon = JSON.parse(polygon);
       const response = await axios.post('http://localhost:8500/api/sentinel/percentage?evi=true', {
         start_date: startDate,
         end_date: endDate,
-        top_left_point: [parseFloat(topLeftPoint.lng), parseFloat(topLeftPoint.lat)],
-        field_size: parseInt(fieldSize)
+        polygon: parsedPolygon
       });
       setImageData(response.data.image);
       setPercentages(response.data.percentage_of_evi || response.data.percentage_of_ndvi);
     } catch (error) {
       console.error('Error fetching data', error);
+    } finally {
+      setLoading(false); // Set loading to false after the request is complete
     }
+  };
+
+  const formatPercentage = (value) => {
+    return value ? value.toFixed(3) : 'N/A';
   };
 
   return (
     <div className="container">
-      <div className="company-name" style={{  padding: '10px', marginBottom: '20px' }}>
+      <div className="company-name" style={{ padding: '10px', marginBottom: '20px' }}>
         <h1 style={{ color: 'white' }}>Capazeta</h1>
       </div>
-      {/* <h2>Vegetation Analysis</h2> */}
       <div className="content">
         <form onSubmit={handleSubmit} className="form">
           <div>
@@ -44,36 +50,35 @@ const App = () => {
             <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} required />
           </div>
           <div>
-            <label>Top Left Point Latitude:</label>
-            <input type="text" value={topLeftPoint.lat} onChange={(e) => setTopLeftPoint({ ...topLeftPoint, lat: e.target.value })} required />
+            <label>Polygon:</label>
+            <textarea
+              value={polygon}
+              onChange={(e) => setPolygon(e.target.value)}
+              placeholder='Enter polygon coordinates as JSON array'
+              required
+            />
           </div>
-          <div>
-            <label>Top Left Point Longitude:</label>
-            <input type="text" value={topLeftPoint.lng} onChange={(e) => setTopLeftPoint({ ...topLeftPoint, lng: e.target.value })} required />
-          </div>
-          {/* Campo Field Size oculto */}
-          <input type="hidden" value={fieldSize} />
           {/* EVI field oculto */}
           <input type="hidden" value={evi} />
           <button type="submit" className="material-button">Submit</button>
         </form>
-        <div className="results">
-          {percentages && (
-            <div>
+        <div className="results-container">
+          {loading && <div className="loading">Loading...</div>}
+          {imageData && !loading && (
+            <div className="image-container">
+              <img src={`data:image/png;base64,${imageData}`} alt="Vegetation Analysis" />
+            </div>
+          )}
+          {percentages && !loading && (
+            <div className="results">
               <h3>Vegetation Percentages</h3>
-              <p>No Vegetation: {percentages.no_vegetation}</p>
-              <p>Moderate Vegetation: {percentages.moderate_vegetation}</p>
-              <p>Dense Vegetation: {percentages.dense_vegetation}</p>
+              <p>No Vegetation: {formatPercentage(percentages.no_vegetation)}</p>
+              <p>Moderate Vegetation: {formatPercentage(percentages.moderate_vegetation)}</p>
+              <p>Dense Vegetation: {formatPercentage(percentages.dense_vegetation)}</p>
             </div>
           )}
         </div>
       </div>
-      {imageData && (
-        <div className="image-container">
-          {/* <h3>Image</h3> */}
-          <img src={`data:image/png;base64,${imageData}`} alt="Vegetation Analysis" />
-        </div>
-      )}
     </div>
   );
 };

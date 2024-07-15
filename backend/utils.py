@@ -24,16 +24,53 @@ def percentage_of_ndvi(ndvi):
         "dense_vegetation": porcentaje_densa
     }
 
-def calculate_evi(image):
+# def calculate_evi(image):
+#     nir = image[:, :, 3].astype(float)
+#     red = image[:, :, 0].astype(float)
+#     blue = image[:, :, 2].astype(float)
+#     evi = 2.5 * (nir - red) / (nir + 6 * red - 7.5 * blue + 1)
+#     evi[np.isnan(evi)] = 0
+#     evi = np.clip(evi, -1, 1)
+#     return evi
+
+# def percentage_of_evi(evi):
+#     total_pixels = evi.size
+#     vegetacion_baja = np.sum(evi < 0.2)
+#     vegetacion_moderada = np.sum((evi >= 0.2) & (evi < 0.5))
+#     vegetacion_densa = np.sum(evi >= 0.5)
+
+#     porcentaje_baja = (vegetacion_baja / total_pixels) * 100
+#     porcentaje_moderada = (vegetacion_moderada / total_pixels) * 100
+#     porcentaje_densa = (vegetacion_densa / total_pixels) * 100
+
+#     return {
+#         "no_vegetation": porcentaje_baja,
+#         "moderate_vegetation": porcentaje_moderada,
+#         "dense_vegetation": porcentaje_densa
+#     }
+
+def calculate_evi(image, mask):
     nir = image[:, :, 3].astype(float)
     red = image[:, :, 0].astype(float)
     blue = image[:, :, 2].astype(float)
+    
+    # Aplica la máscara para excluir píxeles fuera del polígono
+    nir[~mask] = np.nan
+    red[~mask] = np.nan
+    blue[~mask] = np.nan
+    
     evi = 2.5 * (nir - red) / (nir + 6 * red - 7.5 * blue + 1)
     evi[np.isnan(evi)] = 0
     evi = np.clip(evi, -1, 1)
     return evi
 
 def percentage_of_evi(evi):
+        # Verificar el número de valores no NaN en el EVI
+    evi_non_nan_count = np.sum(~np.isnan(evi))
+    print(f"Total de valores EVI no NaN: {evi_non_nan_count}")
+            
+    # Excluir los píxeles que son NaN (fuera del polígono)
+    evi = evi[~np.isnan(evi)]
     total_pixels = evi.size
     vegetacion_baja = np.sum(evi < 0.2)
     vegetacion_moderada = np.sum((evi >= 0.2) & (evi < 0.5))
